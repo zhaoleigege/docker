@@ -1,0 +1,128 @@
+
+<!DOCTYPE html>
+<html>
+  <!-- OriginalSrc: https://www.kevinhooke.com/2017/09/28/running-a-remote-docker-registry-and-getting-http-response-to-https-request-error-on-push/ -->
+  <head>
+    <meta http-equiv="Content-Type" content="text/html"; charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Running a remote Docker Registry and getting ‘HTTP response to HTTPS request’ error on push – Kev's Development Toolbox</title>
+    
+<link rel="stylesheet" id="gglcptch-css" href="assets/1547783307-4bbd123f5f4e8028bdd8fe214b008cce.css" type="text/css" media="all">
+
+<link rel="stylesheet" id="wp-block-library-css" href="assets/1547783307-1f3718613e2aca2626852667d5de77dc.css" type="text/css" media="all">
+
+<link rel="stylesheet" id="twentyseventeen-fonts-css" href="assets/1547783307-3e28f8ceff893dbb25ef8cde397d0949.css" type="text/css" media="all">
+
+<link rel="stylesheet" id="twentyseventeen-style-css" href="assets/1547783307-a2d6a4228466cd829f204b68f7a02386.css" type="text/css" media="all">
+
+<link rel="stylesheet" id="social-logos-css" href="assets/1547783307-948e9c09a0d458cac56f7d273838c816.css" type="text/css" media="all">
+
+<link rel="stylesheet" id="jetpack_css-css" href="assets/1547783307-f5f1ea703d97c57b108174c1059d947b.css" type="text/css" media="all">
+
+<link rel="stylesheet" type="text/css" id="gravatar-card-css" href="assets/1547783307-098c52892cb8c76ac0b6460785c82d15.css">
+
+<link rel="stylesheet" type="text/css" id="gravatar-card-services-css" href="assets/1547783307-115eb139e6caace329985c3ccb7b955f.css">
+<style>
+
+img.wp-smiley,
+img.emoji {
+	display: inline !important;
+	border: none !important;
+	box-shadow: none !important;
+	height: 1em !important;
+	width: 1em !important;
+	margin: 0 .07em !important;
+	vertical-align: -0.1em !important;
+	background: none !important;
+	padding: 0 !important;
+}
+
+</style>
+<style>
+
+</style>
+<style>
+@media print {#ghostery-purple-box {display:none !important}}
+</style>
+<style>
+img#wpstats{display:none}
+</style>
+<style>
+
+</style>
+<style>
+object,embed{                -webkit-animation-duration:.001s;-webkit-animation-name:playerInserted;                -ms-animation-duration:.001s;-ms-animation-name:playerInserted;                -o-animation-duration:.001s;-o-animation-name:playerInserted;                animation-duration:.001s;animation-name:playerInserted;}                @-webkit-keyframes playerInserted{from{opacity:0.99;}to{opacity:1;}}                @-ms-keyframes playerInserted{from{opacity:0.99;}to{opacity:1;}}                @-o-keyframes playerInserted{from{opacity:0.99;}to{opacity:1;}}                @keyframes playerInserted{from{opacity:0.99;}to{opacity:1;}}
+</style>
+
+    <style class="mx-wc-style">
+      .mx-wc-main img {max-width: 100%;}
+      .mx-wc-main{
+        box-sizing: content-box;
+        background-color: rgb(255, 255, 255) !important;
+        margin: 0 auto;
+        max-width: 600px;
+        padding: 15px 15px 80px 15px;
+      }
+
+      .mx-wc-main > .clipping-information{
+        text-align: left;
+        margin-top: 20px;
+        background-color: #eeeeee !important;
+        padding: 15px;
+        border-radius: 4px;
+        color: #333;
+        font-size: 14px !important;
+        line-height: 22px !important;
+      }
+      .mx-wc-main > .clipping-information a {
+        color: blue !important;
+        text-decoration: underline !important;
+      }
+      .mx-wc-main > .clipping-information label {
+        display: inline;
+        text-transform: none;
+      }
+      .mx-wc-main > .clipping-information label > code {
+        padding: 2px 8px;
+        background-color: rgba(200, 200, 200, 0.7)!important;
+        font-size: 14px;
+      }
+
+    </style>
+  </head>
+  <body style="background-color: #464646 !important; min-height: 100%; height: auto;" id="" class="post-template-default single single-post postid-5776 single-format-standard has-header-image has-sidebar colors-light">
+    <div class="mx-wc-main">
+      <DIV id="page" class="site" style="display: block; float: none; position: relative; top: 0; left: 0; border: 0px; width: 100%; min-width:100%; max-width: 100%; min-height: auto; max-height: 100%; height: auto; padding: 0px; margin: 0px;"><DIV class="site-content-contain" style="display: block; float: none; position: relative; top: 0; left: 0; border: 0px; width: 100%; min-width:100%; max-width: 100%; min-height: auto; max-height: 100%; height: auto; padding: 0px; margin: 0px;"><DIV id="content" class="site-content" style="display: block; float: none; position: relative; top: 0; left: 0; border: 0px; width: 100%; min-width:100%; max-width: 100%; min-height: auto; max-height: 100%; height: auto; padding: 0px; margin: 0px;"><DIV class="wrap" style="display: block; float: none; position: relative; top: 0; left: 0; border: 0px; width: 100%; min-width:100%; max-width: 100%; min-height: auto; max-height: 100%; height: auto; padding: 0px; margin: 0px;"><DIV id="primary" class="content-area" style="display: block; float: none; position: relative; top: 0; left: 0; border: 0px; width: 100%; min-width:100%; max-width: 100%; min-height: auto; max-height: 100%; height: auto; padding: 0px; margin: 0px;"><MAIN id="main" class="site-main" role="main" style="display: block; float: none; position: relative; top: 0; left: 0; border: 0px; width: 100%; min-width:100%; max-width: 100%; min-height: auto; max-height: 100%; height: auto; padding: 0px; margin: 0px;"><ARTICLE id="post-5776" class="post-5776 post type-post status-publish format-standard hentry category-blog tag-containers tag-docker tag-rancher tag-registry" style="display: block; float: none; position: relative; top: 0; left: 0; border: 0px; width: 100%; min-width:100%; max-width: 100%; min-height: auto; max-height: 100%; height: auto; padding: 0px; margin: 0px;"><div class="entry-content mx-wc-selected-elem" style="float: none; position: relative; top: 0px; left: 0px; margin: 0px; flex: unset; width: 100%; max-width: 100%; box-sizing: border-box;">
+		<p>It’s been a while since I looked into running a Docker Registry to host images, my previous notes&nbsp;on setting this up are <a href="https://www.kevinhooke.com/2016/06/18/running-a-local-insecure-docker-registry-for-testing/" target="_blank" rel="noopener">here</a>. While looking into setting up Docker Registry running on a remote CentOS VM (currently running on my Mac Pro running <a href="https://www.kevinhooke.com/2017/09/24/proxmox-installation-on-a-2008-mac-pro/" target="_blank" rel="noopener">Proxmox</a>) I ran into the configuration issue with insecure registries.</p>
+<p>Having tagged an image ready to push to my remote Repository, this error looks like this:</p>
+<pre class="p1"><span class="s1">$ docker push 192.168.1.73:5000/redisservice</span>
+
+<span class="s1">The push refers to a repository [192.168.1.73:5000/redisservice]</span>
+
+<span class="s1">Get https://192.168.1.73:5000/v2/: http: server gave HTTP response to HTTPS client</span></pre>
+<p>Unless you’re familiar with this error and the required flag to configure running a Repository insecure (for local testing), there’s articles and posts about how to configure this, but it’s not immediately obvious that the config need to be made on the client side where you’re trying to push from, not on the server side running the Repository.</p>
+<p>On my CentOS server side this would be configured in /etc/docker/daemon.json as:</p>
+<pre class="p1"><span class="s1">{</span>
+<span class="s1"><span class="Apple-converted-space">&nbsp;&nbsp; </span>"insecure-registries": [</span>
+<span class="s1"><span class="Apple-converted-space">&nbsp;&nbsp; &nbsp; </span>"192.168.1.73:5000"</span>
+<span class="s1"><span class="Apple-converted-space">&nbsp;&nbsp; </span>]</span>
+<span class="s1">}</span></pre>
+<p>But after finding this has no effect, I saw this <a href="https://github.com/moby/moby/issues/28321" target="_blank" rel="noopener">post</a>, which suggested to configure this from the client. From my Mac Docker client this can be configured using the widget in the toolbar when Docker is running:</p>
+<p id="QjIFYAU"><img data-attachment-id="5789" data-permalink="https://www.kevinhooke.com/2017/09/28/running-a-remote-docker-registry-and-getting-http-response-to-https-request-error-on-push/img_59cdd5f6d797d/" data-orig-file="https://i0.wp.com/www.kevinhooke.com/wp-content/uploads/2017/09/img_59cdd5f6d797d.png?fit=380%2C525&amp;ssl=1" data-orig-size="380,525" data-comments-opened="1" data-image-meta="{&quot;aperture&quot;:&quot;0&quot;,&quot;credit&quot;:&quot;&quot;,&quot;camera&quot;:&quot;&quot;,&quot;caption&quot;:&quot;&quot;,&quot;created_timestamp&quot;:&quot;0&quot;,&quot;copyright&quot;:&quot;&quot;,&quot;focal_length&quot;:&quot;0&quot;,&quot;iso&quot;:&quot;0&quot;,&quot;shutter_speed&quot;:&quot;0&quot;,&quot;title&quot;:&quot;&quot;,&quot;orientation&quot;:&quot;0&quot;}" data-image-title="img_59cdd5f6d797d" data-image-description="" data-medium-file="https://i0.wp.com/www.kevinhooke.com/wp-content/uploads/2017/09/img_59cdd5f6d797d.png?fit=217%2C300&amp;ssl=1" data-large-file="https://i0.wp.com/www.kevinhooke.com/wp-content/uploads/2017/09/img_59cdd5f6d797d.png?fit=380%2C525&amp;ssl=1" class="alignnone size-full wp-image-5789 " src="assets/1547783307-1ebf8a6ce00e31e9d5a597f36d99cf82.png" alt="" sizes="(max-width: 380px) 100vw, 380px" width="380" height="525"></p>
+<p>Now trying again:</p>
+<p class="p1"><span class="s1">$ docker push 192.168.1.73:5000/redisservice</span></p>
+<pre class="p1"><span class="s1">The push refers to a repository [192.168.1.73:5000/redisservice]</span>
+
+<span class="s1">2ac8b2b0781d: Pushed </span>
+
+<span class="s1">7ce27e37c9b1: Pushed </span>
+
+<span class="s1">e870224c1375: Pushed </span>
+
+<span class="s1">3fc666989c1d: Pushed </span>
+
+<span class="s1">latest: digest: sha256:9f015c8d73c814d8bf0c0d089b8960c7c5c36cec750c81e09378cd2cb8d844af size: 1159</span></pre>
+<p class="p1"><span class="s1">Success! Next up, I’m looking into creating a Stack of my related Container services on <a href="http://rancher.com/rancher/" target="_blank" rel="noopener">Rancher</a>.</span></p>
+  </body>
+</html>

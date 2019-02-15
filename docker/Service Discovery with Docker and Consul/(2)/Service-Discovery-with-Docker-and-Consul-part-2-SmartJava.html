@@ -1,0 +1,527 @@
+
+<!DOCTYPE html>
+<html>
+  <!-- OriginalSrc: http://www.smartjava.org/content/service-discovery-docker-and-consul-part-2/ -->
+  <head>
+    <meta http-equiv="Content-Type" content="text/html"; charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Service Discovery with Docker and Consul: part 2 - SmartJava</title>
+    
+<link rel="stylesheet" href="assets/1548666576-a4d321069f965e7ece6e5c11ca952e3e.css">
+<style>
+svg:not(:root).svg-inline--fa{overflow:visible}.svg-inline--fa{display:inline-block;font-size:inherit;height:1em;overflow:visible;vertical-align:-.125em}.svg-inline--fa.fa-lg{vertical-align:-.225em}.svg-inline--fa.fa-w-1{width:.0625em}.svg-inline--fa.fa-w-2{width:.125em}.svg-inline--fa.fa-w-3{width:.1875em}.svg-inline--fa.fa-w-4{width:.25em}.svg-inline--fa.fa-w-5{width:.3125em}.svg-inline--fa.fa-w-6{width:.375em}.svg-inline--fa.fa-w-7{width:.4375em}.svg-inline--fa.fa-w-8{width:.5em}.svg-inline--fa.fa-w-9{width:.5625em}.svg-inline--fa.fa-w-10{width:.625em}.svg-inline--fa.fa-w-11{width:.6875em}.svg-inline--fa.fa-w-12{width:.75em}.svg-inline--fa.fa-w-13{width:.8125em}.svg-inline--fa.fa-w-14{width:.875em}.svg-inline--fa.fa-w-15{width:.9375em}.svg-inline--fa.fa-w-16{width:1em}.svg-inline--fa.fa-w-17{width:1.0625em}.svg-inline--fa.fa-w-18{width:1.125em}.svg-inline--fa.fa-w-19{width:1.1875em}.svg-inline--fa.fa-w-20{width:1.25em}.svg-inline--fa.fa-pull-left{margin-right:.3em;width:auto}.svg-inline--fa.fa-pull-right{margin-left:.3em;width:auto}.svg-inline--fa.fa-border{height:1.5em}.svg-inline--fa.fa-li{width:2em}.svg-inline--fa.fa-fw{width:1.25em}.fa-layers svg.svg-inline--fa{bottom:0;left:0;margin:auto;position:absolute;right:0;top:0}.fa-layers{display:inline-block;height:1em;position:relative;text-align:center;vertical-align:-.125em;width:1em}.fa-layers svg.svg-inline--fa{-webkit-transform-origin:center center;transform-origin:center center}.fa-layers-counter,.fa-layers-text{display:inline-block;position:absolute;text-align:center}.fa-layers-text{left:50%;top:50%;-webkit-transform:translate(-50%,-50%);transform:translate(-50%,-50%);-webkit-transform-origin:center center;transform-origin:center center}.fa-layers-counter{background-color:#ff253a;border-radius:1em;-webkit-box-sizing:border-box;box-sizing:border-box;color:#fff;height:1.5em;line-height:1;max-width:5em;min-width:1.5em;overflow:hidden;padding:.25em;right:0;text-overflow:ellipsis;top:0;-webkit-transform:scale(.25);transform:scale(.25);-webkit-transform-origin:top right;transform-origin:top right}.fa-layers-bottom-right{bottom:0;right:0;top:auto;-webkit-transform:scale(.25);transform:scale(.25);-webkit-transform-origin:bottom right;transform-origin:bottom right}.fa-layers-bottom-left{bottom:0;left:0;right:auto;top:auto;-webkit-transform:scale(.25);transform:scale(.25);-webkit-transform-origin:bottom left;transform-origin:bottom left}.fa-layers-top-right{right:0;top:0;-webkit-transform:scale(.25);transform:scale(.25);-webkit-transform-origin:top right;transform-origin:top right}.fa-layers-top-left{left:0;right:auto;top:0;-webkit-transform:scale(.25);transform:scale(.25);-webkit-transform-origin:top left;transform-origin:top left}.fa-lg{font-size:1.33333em;line-height:.75em;vertical-align:-.0667em}.fa-xs{font-size:.75em}.fa-sm{font-size:.875em}.fa-1x{font-size:1em}.fa-2x{font-size:2em}.fa-3x{font-size:3em}.fa-4x{font-size:4em}.fa-5x{font-size:5em}.fa-6x{font-size:6em}.fa-7x{font-size:7em}.fa-8x{font-size:8em}.fa-9x{font-size:9em}.fa-10x{font-size:10em}.fa-fw{text-align:center;width:1.25em}.fa-ul{list-style-type:none;margin-left:2.5em;padding-left:0}.fa-ul>li{position:relative}.fa-li{left:-2em;position:absolute;text-align:center;width:2em;line-height:inherit}.fa-border{border:solid .08em #eee;border-radius:.1em;padding:.2em .25em .15em}.fa-pull-left{float:left}.fa-pull-right{float:right}.fa.fa-pull-left,.fab.fa-pull-left,.fal.fa-pull-left,.far.fa-pull-left,.fas.fa-pull-left{margin-right:.3em}.fa.fa-pull-right,.fab.fa-pull-right,.fal.fa-pull-right,.far.fa-pull-right,.fas.fa-pull-right{margin-left:.3em}.fa-spin{-webkit-animation:fa-spin 2s infinite linear;animation:fa-spin 2s infinite linear}.fa-pulse{-webkit-animation:fa-spin 1s infinite steps(8);animation:fa-spin 1s infinite steps(8)}@-webkit-keyframes fa-spin{0%{-webkit-transform:rotate(0);transform:rotate(0)}100%{-webkit-transform:rotate(360deg);transform:rotate(360deg)}}@keyframes fa-spin{0%{-webkit-transform:rotate(0);transform:rotate(0)}100%{-webkit-transform:rotate(360deg);transform:rotate(360deg)}}.fa-rotate-90{-webkit-transform:rotate(90deg);transform:rotate(90deg)}.fa-rotate-180{-webkit-transform:rotate(180deg);transform:rotate(180deg)}.fa-rotate-270{-webkit-transform:rotate(270deg);transform:rotate(270deg)}.fa-flip-horizontal{-webkit-transform:scale(-1,1);transform:scale(-1,1)}.fa-flip-vertical{-webkit-transform:scale(1,-1);transform:scale(1,-1)}.fa-flip-horizontal.fa-flip-vertical{-webkit-transform:scale(-1,-1);transform:scale(-1,-1)}:root .fa-flip-horizontal,:root .fa-flip-vertical,:root .fa-rotate-180,:root .fa-rotate-270,:root .fa-rotate-90{-webkit-filter:none;filter:none}.fa-stack{display:inline-block;height:2em;position:relative;width:2.5em}.fa-stack-1x,.fa-stack-2x{bottom:0;left:0;margin:auto;position:absolute;right:0;top:0}.svg-inline--fa.fa-stack-1x{height:1em;width:1.25em}.svg-inline--fa.fa-stack-2x{height:2em;width:2.5em}.fa-inverse{color:#fff}.sr-only{border:0;clip:rect(0,0,0,0);height:1px;margin:-1px;overflow:hidden;padding:0;position:absolute;width:1px}.sr-only-focusable:active,.sr-only-focusable:focus{clip:auto;height:auto;margin:0;overflow:visible;position:static;width:auto}
+</style>
+<style>
+
+</style>
+<style>
+@media print {#ghostery-purple-box {display:none !important}}
+</style>
+<style>
+.fluid-width-video-wrapper{width:100%;position:relative;padding:0;}.fluid-width-video-wrapper iframe,.fluid-width-video-wrapper object,.fluid-width-video-wrapper embed {position:absolute;top:0;left:0;width:100%;height:100%;}
+</style>
+<style>
+object,embed{                -webkit-animation-duration:.001s;-webkit-animation-name:playerInserted;                -ms-animation-duration:.001s;-ms-animation-name:playerInserted;                -o-animation-duration:.001s;-o-animation-name:playerInserted;                animation-duration:.001s;animation-name:playerInserted;}                @-webkit-keyframes playerInserted{from{opacity:0.99;}to{opacity:1;}}                @-ms-keyframes playerInserted{from{opacity:0.99;}to{opacity:1;}}                @-o-keyframes playerInserted{from{opacity:0.99;}to{opacity:1;}}                @keyframes playerInserted{from{opacity:0.99;}to{opacity:1;}}
+</style>
+
+    <style class="mx-wc-style">
+      .mx-wc-main img {max-width: 100%;}
+      .mx-wc-main{
+        box-sizing: content-box;
+        background-color: rgb(37, 42, 52) !important;
+        margin: 0 auto;
+        max-width: 1048px;
+        padding: 15px 15px 80px 15px;
+      }
+
+      .mx-wc-main > .clipping-information{
+        text-align: left;
+        margin-top: 20px;
+        background-color: #eeeeee !important;
+        padding: 15px;
+        border-radius: 4px;
+        color: #333;
+        font-size: 14px !important;
+        line-height: 22px !important;
+      }
+      .mx-wc-main > .clipping-information a {
+        color: blue !important;
+        text-decoration: underline !important;
+      }
+      .mx-wc-main > .clipping-information label {
+        display: inline;
+        text-transform: none;
+      }
+      .mx-wc-main > .clipping-information label > code {
+        padding: 2px 8px;
+        background-color: rgba(200, 200, 200, 0.7)!important;
+        font-size: 14px;
+      }
+
+    </style>
+  </head>
+  <body style="background-color: #ffffff !important; min-height: 100%; height: auto;" id="" class="layout--single">
+    <div class="mx-wc-main">
+      <DIV class="initial-content" style="display: block; float: none; position: relative; top: 0; left: 0; border: 0px; width: 100%; min-width:100%; max-width: 100%; min-height: auto; max-height: 100%; height: auto; padding: 0px; margin: 0px;"><DIV id="main" role="main" style="display: block; float: none; position: relative; top: 0; left: 0; border: 0px; width: 100%; min-width:100%; max-width: 100%; min-height: auto; max-height: 100%; height: auto; padding: 0px; margin: 0px;"><article class="page mx-wc-selected-elem" itemscope="" itemtype="http://schema.org/CreativeWork" style="float: none; position: relative; top: 0px; left: 0px; margin: 0px; flex: unset; width: 100%; max-width: 100%; box-sizing: border-box;">
+    
+    
+    
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 id="page-title" class="page__title" itemprop="headline">Service Discovery with Docker and Consul: part 2
+</h1>
+          
+            <p class="page__meta">
+              <svg class="svg-inline--fa fa-calendar fa-w-14 fa-fw" aria-hidden="true" data-prefix="fa" data-icon="calendar" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" data-fa-i2svg=""><path fill="currentColor" d="M12 192h424c6.6 0 12 5.4 12 12v260c0 26.5-21.5 48-48 48H48c-26.5 0-48-21.5-48-48V204c0-6.6 5.4-12 12-12zm436-44v-36c0-26.5-21.5-48-48-48h-48V12c0-6.6-5.4-12-12-12h-40c-6.6 0-12 5.4-12 12v52H160V12c0-6.6-5.4-12-12-12h-40c-6.6 0-12 5.4-12 12v52H48C21.5 64 0 85.5 0 112v36c0 6.6 5.4 12 12 12h424c6.6 0 12-5.4 12-12z"></path></svg><!-- <i class="fa fa-fw fa-calendar" aria-hidden="true"></i> --> <time datetime="2016-05-01T00:00:00+02:00">May 01, 2016 </time>
+              <svg class="svg-inline--fa fa-clock fa-w-16" aria-hidden="true" data-prefix="far" data-icon="clock" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" data-fa-i2svg=""><path fill="currentColor" d="M256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8zm0 448c-110.5 0-200-89.5-200-200S145.5 56 256 56s200 89.5 200 200-89.5 200-200 200zm61.8-104.4l-84.9-61.7c-3.1-2.3-4.9-5.9-4.9-9.7V116c0-6.6 5.4-12 12-12h32c6.6 0 12 5.4 12 12v141.7l66.8 48.6c5.4 3.9 6.5 11.4 2.6 16.8L334.6 349c-3.9 5.3-11.4 6.5-16.8 2.6z"></path></svg><!-- <i class="far fa-clock" aria-hidden="true"></i> --> 
+
+
+
+
+  12 minute read
+
+            </p>
+          
+        
+          
+        </header>
+      
+
+      <section class="page__content" itemprop="text">
+        
+          <aside class="sidebar__right sticky">
+            <nav class="toc">
+              <header><h4 class="nav__title"><svg class="svg-inline--fa fa-file-alt fa-w-12" aria-hidden="true" data-prefix="fas" data-icon="file-alt" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512" data-fa-i2svg=""><path fill="currentColor" d="M224 136V0H24C10.7 0 0 10.7 0 24v464c0 13.3 10.7 24 24 24h336c13.3 0 24-10.7 24-24V160H248c-13.2 0-24-10.8-24-24zm64 236c0 6.6-5.4 12-12 12H108c-6.6 0-12-5.4-12-12v-8c0-6.6 5.4-12 12-12h168c6.6 0 12 5.4 12 12v8zm0-64c0 6.6-5.4 12-12 12H108c-6.6 0-12-5.4-12-12v-8c0-6.6 5.4-12 12-12h168c6.6 0 12 5.4 12 12v8zm0-72v8c0 6.6-5.4 12-12 12H108c-6.6 0-12-5.4-12-12v-8c0-6.6 5.4-12 12-12h168c6.6 0 12 5.4 12 12zm96-114.1v6.1H256V0h6.1c6.4 0 12.5 2.5 17 7l97.9 98c4.5 4.5 7 10.6 7 16.9z"></path></svg><!-- <i class="fas fa-file-alt"></i> --> On this page</h4></header>
+              <ul class="toc__menu">
+  <li><a href="http://www.smartjava.org/content/service-discovery-docker-and-consul-part-2/#">Review architecture and what are we going to do</a></li>
+  <li><a href="http://www.smartjava.org/content/service-discovery-docker-and-consul-part-2/#">Consultemplate, docker and HAProxy</a>
+    <ul>
+      <li><a href="http://www.smartjava.org/content/service-discovery-docker-and-consul-part-2/#">How does it work</a></li>
+      <li><a href="http://www.smartjava.org/content/service-discovery-docker-and-consul-part-2/#">Run it!</a></li>
+      <li><a href="http://www.smartjava.org/content/service-discovery-docker-and-consul-part-2/#">HAProxy and consul template Conclusions</a></li>
+    </ul>
+  </li>
+  <li><a href="http://www.smartjava.org/content/service-discovery-docker-and-consul-part-2/#">EnvConsul, easily provide environment properties when starting up an application.</a></li>
+  <li><a href="http://www.smartjava.org/content/service-discovery-docker-and-consul-part-2/#">Conclusions</a></li>
+</ul>
+            </nav>
+          </aside>
+        
+        <p>So, welcome to the second part of the series on using Consul for service discovey together with docker. In this second article we'll look at how you can use a number of Consul related tools, so make service discovery, and a couple of other related functionalities a lot easier.</p>
+<p>For the other articles in this series you can look here:</p>
+<ol>
+  <li><a href="http://www.smartjava.org/content/presentation-service-discovery-microservice-architecture">Presentation on Service discovery with consul</a></li>
+  <li><a href="http://www.smartjava.org/content/service-discovery-docker-and-consul-part-1">Service discover with Docker and Consul: Part 1</a></li>
+</ol>
+<h2><a href="#review-architecture-and-what-are-we-going-to-do" name="review-architecture-and-what-are-we-going-to-do">Review architecture and what are we going to do</a></h2>
+<p>In this article we'll expand on the setup we created in the <a href="http://www.smartjava.org/content/service-discovery-docker-and-consul-part-1">previous article</a>. In that article we created the following microservices architecture using Docker and Consul:</p>
+<p><img src="assets/1548666576-187a625a9d1c09debc463f69430bd9ce.png" width="542" height="386" alt="demo1_0.png"></p>
+<p>So, if you haven't done so, walk through the steps in that article, and make sure you've got a setup that can use Docker Swarm, Docker Compose and has the correct Docker network setup. To check whether everything is setup correctly, check the output of the following commands:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># See the previous article for the definitions of these commands
+#
+# First, check Consul. If consul isn't up, the swarm won't come up or work.
+
+$ . dm-env nb-consul
+$ docker ps --format '\t\t\t'
+
+b5d55e6df248       progrium/consul "/bin/start -server -"  clever_panini
+
+# if consul isn't up, make sure to start it, before trying any of the swarm
+# commands.
+$ . dm-env nb1 --swarm
+$ docker ps -a --format '\t\t\t'
+
+bf2000882dcc    progrium/consul "/bin/start -ui-dir /"  nb1/consul_agent_1
+a1bc26eef516    progrium/consul "/bin/start -ui-dir /"  nb2/consul_agent_2
+eb0d1c0cc075    progrium/consul "/bin/start -ui-dir /"  nb3/consul_agent_3
+d27050901dc1    swarm:latest    "/swarm join --advert"  nb3/swarm-agent
+f66738e086b8    swarm:latest    "/swarm join --advert"  nb2/swarm-agent
+0ac59ef54207    swarm:latest    "/swarm join --advert"  nb1/swarm-agent
+17fc5563d018    swarm:latest    "/swarm manage --tlsv"  nb1/swarm-agent-master
+
+# this should at least list the swarm master, swarm agents, and the consul agents.
+# if not, see previous article on how to setup your environment.
+
+# the last thing we need to check is our network. When the swarm master is selected
+# run the following command:
+$ docker network ls | grep -i my-net
+8ecec72e7b68        my-net                overlay
+
+# if it shows an overlay network with my-net we're all set.
+
+</code></pre></div></div>
+
+<p>Should you see some frontend or backend services, it's probably best to stop and remove them. That way you can follow the commands in the rest of this article.</p>
+<p>So what will we be doing in this article. Well, we'll show you how to use the following two tools from the Consul universe:</p>
+<ul>
+  <li><strong>Consultemplate</strong>: With <a href="https://github.com/hashicorp/consul-template">Consultemplate</a> you can listen to events from Consul (e.g when a service is added), and based on these updates, rewrite and reload a configuration file. We'll use this to automatically update the configuration of an HAProxy based reverse proxy, with the latest set of healthy services.</li>
+  <li><strong>EnvConsul</strong>: With <a href="https://github.com/hashicorp/envconsul">Envconsul</a> you can easily read environment variables directly from Consul, instead of having to pass them in manually when you start a docker container. We will show how you could use this with the services we use in these articles.</li>
+</ul>
+<h2><a href="#consultemplate-docker-and-haproxy" name="consultemplate-docker-and-haproxy">Consultemplate, docker and HAProxy</a></h2>
+<p>In the previous setup we created an architecture as shown in the figure above. While this already worked great by using the DNS functions of Consul for service discovery and some basic failover, we had to rely on DNS and socket timeouts, to determine when a service became unhealthy. While this worked, it was not that reliable, and only offered some simple failover and loadbalancing functionality. What we're going to do in this scenario is create the following:</p>
+<p><img src="assets/1548666576-4853d40a9bf77227c1af23f34c62438d.png" width="504" height="446" alt="demo2.png"></p>
+<p>So the scenario we'll have is the following:</p>
+<ol>
+  <li>A user will access our frontend service through the HAProxy.</li>
+  <li>HAProxy will forward the request to one of the healthy services.</li>
+  <li>The fronted service, wants to access a backend service. It also does this through the HAProxy component.</li>
+</ol>
+<p>Consul will make sure that whenever a service registers itself with Consul, it updates the configuration of HAProxy.</p>
+<h3><a href="#how-does-it-work" name="how-does-it-work">How does it work</a></h3>
+<p>If you've pulled the repository for these articles (<a href="https://github.com/josdirksen/next-build-consul">https://github.com/josdirksen/next-build-consul</a>) you can also find a directory called <strong>extra/consul-template</strong>. In that directory is the HAProxy that we'll use for this example. I've also added it to dockerhub (<a href="https://hub.docker.com/r/josdirksen/demo-haproxy/)">https://hub.docker.com/r/josdirksen/demo-haproxy/)</a>, which makes using it a bit easier. Before we look at how we need to define our template, lets look at what this docker image does. Easiest is to look at the startup script:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">#!/bin/bash</span>
+
+<span class="nv">HAPROXY</span><span class="o">=</span><span class="s2">"/etc/haproxy"</span>
+<span class="nv">PIDFILE</span><span class="o">=</span><span class="s2">"/var/run/haproxy.pid"</span>
+<span class="nv">CONFIG_FILE</span><span class="o">=</span><span class="k">${</span><span class="nv">HAPROXY</span><span class="k">}</span>/haproxy.cfg
+
+<span class="nb">cd</span> <span class="s2">"</span><span class="nv">$HAPROXY</span><span class="s2">"</span>
+
+haproxy <span class="nt">-f</span> <span class="s2">"</span><span class="nv">$CONFIG_FILE</span><span class="s2">"</span> <span class="nt">-p</span> <span class="s2">"</span><span class="nv">$PIDFILE</span><span class="s2">"</span> <span class="nt">-D</span> <span class="nt">-st</span> <span class="k">$(</span><span class="nb">cat</span> <span class="nv">$PIDFILE</span><span class="k">)</span>
+
+/usr/local/bin/consul-template <span class="nt">-consul</span><span class="o">=</span><span class="k">${</span><span class="nv">CONSUL_ADDRESS</span><span class="k">}</span> <span class="nt">-config</span><span class="o">=</span>/consul.hcl
+
+</code></pre></div></div>
+
+<p>Nothing too special here, what happens it that when we start this container, <strong>consul-template</strong> will run with the specified configuration file. Note that we need to provide the <strong>CONSUL_ADDRESS</strong> environment variable to point consul-template to either one of our agents, or the consul server. The interesting stuff is in the <strong>consul.hcl</strong> file:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>max_stale = "10m"
+retry     = "10s"
+wait      = "5s:20s"
+
+template {
+  source = "/etc/haproxy/haproxy.template"
+  destination = "/etc/haproxy/haproxy.cfg"
+  command = "/hap.sh"
+  perms = 0600
+}
+
+
+</code></pre></div></div>
+
+<p>this file is pretyy self explanatory. Basically what happens is that whenever something changes in Consul, the template <strong>haproxy.template</strong> will be ran against the information in Consul, and the result will replace the <strong>haproxy.cfg</strong> file. After that the <strong>hap.sh</strong> command is run to reload the configuration. For completeness sake, the <strong>hap.sh</strong> file looks like this:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">#!/bin/bash</span>
+
+haproxy <span class="nt">-f</span> /etc/haproxy/haproxy.cfg <span class="nt">-p</span> /var/run/haproxy.pid <span class="nt">-D</span> <span class="nt">-st</span> <span class="k">$(</span><span class="nb">cat</span> /var/run/haproxy.pid<span class="k">)</span>
+
+</code></pre></div></div>
+
+<p>What this does, is reload the configuration file in a clean manner. So, what is in the template? Lets look at the <strong>haproxy.template</strong>:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>global
+  log 127.0.0.1 local0
+  log 127.0.0.1 local1 notice
+  chroot /var/lib/haproxy
+  user haproxy
+  group haproxy
+
+defaults
+  log global
+  mode http
+  option httplog
+  option dontlognull
+  balance roundrobin
+  timeout connect 5000
+  timeout client 50000
+  timeout server 50000
+  errorfile 400 /etc/haproxy/errors/400.http
+  errorfile 403 /etc/haproxy/errors/403.http
+  errorfile 408 /etc/haproxy/errors/408.http
+  errorfile 500 /etc/haproxy/errors/500.http
+  errorfile 502 /etc/haproxy/errors/502.http
+  errorfile 503 /etc/haproxy/errors/503.http
+  errorfile 504 /etc/haproxy/errors/504.http
+
+listen stats
+  bind *:8001
+  stats enable
+  stats uri /
+  stats auth admin:123123q
+  stats realm HAProxy\ Statistics
+
+frontend nb-front
+  bind *:1080
+  mode http
+  default_backend nb-frontend
+
+frontend nb-back
+  bind *:1081
+  mode http
+  default_backend nb-backend
+
+backend nb-frontend
+    balance roundrobin
+    server  : check
+
+backend nb-backend
+   balance roundrobin
+   server  : check
+
+</code></pre></div></div>
+
+<p>The first couple of lines aren't interesting. It becomes interesting where we define the <strong>frontend</strong> and the <strong>backend</strong> elements. What we say here is that we specify that haproxy will listen to request for the <strong>frontend</strong> at port 1080, and forward those requests to the services defined in <strong>backend nb-frontend</strong>. In this element we configure a template. In this example we take all the services with the name <strong>frontend-service</strong> from Consul, and for each service we write down an entry. So when we call haproxy on port 1080, it'll forward the request to any of the services with the name <strong>frontend-service</strong> registerd in Consul. We do exactly the same for the <strong>backend-service</strong>.</p>
+<h3><a href="#run-it-" name="run-it-">Run it!</a></h3>
+<p>So, now that we know how it works, it's time to run this haproxy. We've defined a docker-compose file for this, which will run HAProxy in node <strong>nb1</strong>:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>version: '2'
+
+services:
+  nb-proxy:
+    image: josdirksen/demo-haproxy
+    container_name: nb-haproxy
+    ports:
+      - 1080:1080
+      - 1081:1081
+    environment:
+      - CONSUL_ADDRESS=192.168.99.106:8500
+      - "constraint:node==nb1"
+
+networks:
+  default:
+    external:
+      name: my-net
+
+</code></pre></div></div>
+
+<p>Execute the following commands to do this:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># make sure we're at the swarm master
+$ . dm-env nb1 --swarm
+
+# in the root of the nextbuild-consul project
+$ docker-compose -f ./docker-compose-haproxy.yml up -d
+Creating nb-haproxy
+
+$ docker ps -a --format '\t\t\t'
+
+dc28caa4c420    josdirksen/demo-haproxy "/startup.sh"   nb1/nb-haproxy
+bf2000882dcc    progrium/consul "/bin/start -ui-dir /"  nb1/consul_agent_1
+a1bc26eef516    progrium/consul "/bin/start -ui-dir /"  nb2/consul_agent_2
+eb0d1c0cc075    progrium/consul "/bin/start -ui-dir /"  nb3/consul_agent_3
+d27050901dc1    swarm:latest    "/swarm join --advert"  nb3/swarm-agent
+f66738e086b8    swarm:latest    "/swarm join --advert"  nb2/swarm-agent
+0ac59ef54207    swarm:latest    "/swarm join --advert"  nb1/swarm-agent
+17fc5563d018    swarm:latest    "/swarm manage --tlsv"  nb1/swarm-agent-master
+
+</code></pre></div></div>
+
+<p>In my setup I can see that the HAProxy has started. But since we haven't got any backend or frontend services running, the configuration of haproxy should reflect that:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ docker exec -ti nb1/nb-haproxy cat /etc/haproxy/haproxy.cfg | tail -n 15
+frontend nb-front
+  bind *:1080
+  mode http
+  default_backend nb-frontend
+
+frontend nb-back
+  bind *:1081
+  mode http
+  default_backend nb-backend
+
+backend nb-frontend
+    balance roundrobin
+
+backend nb-backend
+   balance roundrobin
+
+</code></pre></div></div>
+
+<p>And if we open up either port 1080 (for the frontend) or 1081 (for the backend API), we'll see an error from HAProxy.</p>
+<p><img src="assets/1548666576-a13fe0a13f507b70ce49bd61b67d9fc1.png" width="700" alt="haproxy_1.png"></p>
+<p>This is to be expected, since we haven't got any frontend or backend service running. So lets give HAProxy a number of backend services to work with:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ docker-compose -f ./docker-compose-backend.yml up -d
+Creating Backend2
+Creating Backend3
+Creating Backend1
+
+</code></pre></div></div>
+
+<p>Now we should have a number of backends running behind HAProxy. First lets check if Consul updated our HAProxy instance:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ docker exec -ti nb1/nb-haproxy cat /etc/haproxy/haproxy.cfg | tail -n 8
+backend nb-frontend
+    balance roundrobin
+
+backend nb-backend
+   balance roundrobin
+   server a1bc26eef516 10.0.9.7:8081 check
+   server bf2000882dcc 10.0.9.9:8081 check
+   server eb0d1c0cc075 10.0.9.8:8081 check
+
+</code></pre></div></div>
+
+<p>Cool, right! Haproxy now has three services defined. This should allow us to call <a href="http://nb1.local:1081/">http://nb1.local:1081</a> and it should return the API of one of the backend services:</p>
+<p><img src="assets/1548666576-c3cdb1bac9db21a494bc008b04b90c3a.png" width="700" alt="haproxy_2.png"></p>
+<p>If you refresh a couple of times, you should see it cycle throught the various services.</p>
+<p>And if we kill one, we should see it automatically skip the killed one:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ docker stop nb1/Backend1
+nb1/Backend1
+
+$ curl nb1.local:1081
+
+        {"result" : {
+          "servername" : "Server2",
+          "querycount" : 80
+          }
+        }
+$ curl nb1.local:1081
+
+        {"result" : {
+          "servername" : "Server3",
+          "querycount" : 86
+          }
+        }
+
+</code></pre></div></div>
+
+<p>Now lets see if our frontend services can use this in the same manner. For this we start the frontend components like this:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ docker-compose up -f ./docker-compose-frontend-proxy
+
+# remember we killed one of the backend services, so we only see two backend ones
+$ docker exec -ti nb1/nb-haproxy cat /etc/haproxy/haproxy.cfg | tail -n 10
+backend nb-frontend
+    balance roundrobin
+    server a1bc26eef516 10.0.9.11:8090 check
+    server bf2000882dcc 10.0.9.9:8090 check
+    server eb0d1c0cc075 10.0.9.10:8090 check
+
+backend nb-backend
+   balance roundrobin
+   server a1bc26eef516 10.0.9.7:8081 check
+   server eb0d1c0cc075 10.0.9.8:8081 check
+
+</code></pre></div></div>
+
+<p>And it looks like HAProxy updated correctly with the new services. Now we should be able to call port 1080 on haproxy, to get one of the frontend service, and use the button to call one of the available backends services (once again through HAproxy).</p>
+<p><img src="assets/1548666576-8d13c9878701ad42a3d0572cd676cb2c.png" width="700" alt="haproxy_3.png"></p>
+<p>And it works as expected! If you refresh this page, you'll see it cycle through the frontend services, and when you hit the button a couple of times, it will only call the services that are available. And, as you'd expect, once we start backend service one again, it'll show up in the list when hitting the button:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ docker start nb1/Backend1
+nb1/Backend1
+
+</code></pre></div></div>
+
+<p>Results in:</p>
+<p><img src="assets/1548666576-192bab7073c76a43ee6bac794eca700b.png" width="700" alt="haproxy_4.png"></p>
+<h3><a href="#haproxy-and-consul-template-conclusions" name="haproxy-and-consul-template-conclusions">HAProxy and consul template Conclusions</a></h3>
+<p>This was a very quick introduction into using Docker together with Consultemplate and HAProxy. As you've seen, getting all this to work is rather easy. Once you've got docker and consul configured tying in extra components becomes much easier. In a real-world scenario we'd also have HAProxy register itself with Consul, so other services can easily find the HAProxy instance.</p>
+<p>As the last part of this article, we'll have a quick look at some of the feature <strong>EnvConsul</strong> provies.</p>
+<h2><a href="#envconsul-easily-provide-environment-properties-when-starting-up-an-application-" name="envconsul-easily-provide-environment-properties-when-starting-up-an-application-">EnvConsul, easily provide environment properties when starting up an application.</a></h2>
+<p>The normal way of passing configuration data into application (especially in a docker / microservices architecture) is by using environment variables. This is an easy, non-intrusive, language agnostic way of configuring your services. It's even one of the subjects of the <a href="http://12factor.net/config">12 factor app</a>.</p>
+<p></p><blockquote>"The twelve-factor app stores config in environment variables (often shortened to env vars or env). Env vars are easy to change between deploys without changing any code; unlike config files, there is little chance of them being checked into the code repo accidentally; and unlike custom config files, or other config mechanisms such as Java System Properties, they are a language- and OS-agnostic standard."</blockquote><p></p>
+<p>However, it becomes very cumbersome when you're dealing with big applications, or large configurations, especially when you have to deal with escaping quotes / linebreaks etc.</p>
+<p>Luckily we can solve this problem with Consul. As you probably know by now, Consul is also a distributed Key-Value store:</p>
+<p><img src="assets/1548666576-c9026808d06b1486d7df528482bb9646.png" width="700" alt="envconsul1.png"></p>
+<p>With EnvConsul, we can use information from the KV store inside Consul as environment parameters before starting our application. So how would this work? We can test this very easy, since EnvConsul is just a golang executable which we can run. I've added the Mac version in the repository (in the <strong>extras</strong> directory), but you can download builds for your OS from here: <a href="https://releases.hashicorp.com/envconsul/0.6.1/">https://releases.hashicorp.com/envconsul/0.6.1/</a></p>
+<p>We'll just run it, and see what happens:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>./envconsul -consul=nb-consul.local:8500 -prefix docker -once env
+...
+network/v1.0/endpoint/815dd44b77f391bd9a63f4e107aa1a7d3f371c91427abcf4be34493aa7ec25cd/=
+nodes/192.168.99.112:2376=192.168.99.112:2376
+swarm/nodes/192.168.99.110:2376=192.168.99.110:2376
+...
+
+</code></pre></div></div>
+
+<p>I've left most of the result out, but basically what we do here, is use env-consul to get all the keys it has stored in the <strong>docker</strong> tree, and add those as environment variables. After these are set we run the <strong>env</strong> command, which just outputs all the environment variables we have. If you run this yourself you'll see a whole lot of docker-network and docker-swarm related information set as environment variables.</p>
+<p>We can of course also set a number of KV pairs ourselves:</p>
+<p><img src="assets/1548666576-a9398a0d6fa8f7dcf7b62e757a86ef7b.png" width="700" alt="envconsul2.png"></p>
+<p>And when we retrieve those, we can see that the values are passed directly into our command as environment variables:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ ./envconsul -consul=nb-consul.local:8500 -prefix smartjava -once env | tail -n 2
+key2=The value of key 2
+key1=The Value of Key 1
+
+</code></pre></div></div>
+
+<p>This, however, isn't everything you can do with envconsul. It also provides an easy way to react to changes in the key value pairs. Imagine you have a service running, which is configured, through an env property. And if that env property changes, you should in fact restart the services. This is something EnvConsul can do for you:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ cat env.sh
+#!/bin/bash
+env
+tail -f /dev/null
+
+$ ./envconsul -consul=nb-consul.local:8500 -pristine -prefix=smartjava ./env.sh
+PWD=/Users/jos/dev/git/nextbuild-consul/extra/envconsul
+SHLVL=1
+key2=The value of key 2
+key1=The Value of Key 1
+_=/usr/bin/env
+
+</code></pre></div></div>
+
+<p>At this point, the process will keep running, and envconsul will wait for updates to the Consul keystore. So when we update something there, this is the result:</p>
+<p><img src="assets/1548666576-eba0933a042c21584f7a2c5dc869fd20.png" width="700" alt="envconsul3.png"></p>
+<p>As you can see in this image, whenever we change a value in the KV store, our script is restarted with the new configuration passed in as env variables.</p>
+<h2><a href="#conclusions" name="conclusions">Conclusions</a></h2>
+<p>In this article, we showed that using HAProxy is actually very easy to do. You can incorporate it in your architecture using the same concepts and ideas we saw in the previous article. Combine this with ConsulTemplate, and getting a highly configurable, software loadbalancer setup is a piece of cake.<br>
+Another cool piece of technology is EnvConsul, this nicely integrates with the distributed KV store provided by Consul. It even provides functionality to restart your application on configuration changes, which is a really powerful feature.</p>
+<p>And that wraps it up for the second article in this series. In the next part of this series we'll look at how you can simplify registration of services with Consul. So replace the custom script we showed in the previous article with a more advanced solution.</p>
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+
+
+        
+          <p class="page__date"><strong><svg class="svg-inline--fa fa-calendar-alt fa-w-14 fa-fw" aria-hidden="true" data-prefix="fas" data-icon="calendar-alt" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" data-fa-i2svg=""><path fill="currentColor" d="M436 160H12c-6.6 0-12-5.4-12-12v-36c0-26.5 21.5-48 48-48h48V12c0-6.6 5.4-12 12-12h40c6.6 0 12 5.4 12 12v52h128V12c0-6.6 5.4-12 12-12h40c6.6 0 12 5.4 12 12v52h48c26.5 0 48 21.5 48 48v36c0 6.6-5.4 12-12 12zM12 192h424c6.6 0 12 5.4 12 12v260c0 26.5-21.5 48-48 48H48c-26.5 0-48-21.5-48-48V204c0-6.6 5.4-12 12-12zm116 204c0-6.6-5.4-12-12-12H76c-6.6 0-12 5.4-12 12v40c0 6.6 5.4 12 12 12h40c6.6 0 12-5.4 12-12v-40zm0-128c0-6.6-5.4-12-12-12H76c-6.6 0-12 5.4-12 12v40c0 6.6 5.4 12 12 12h40c6.6 0 12-5.4 12-12v-40zm128 128c0-6.6-5.4-12-12-12h-40c-6.6 0-12 5.4-12 12v40c0 6.6 5.4 12 12 12h40c6.6 0 12-5.4 12-12v-40zm0-128c0-6.6-5.4-12-12-12h-40c-6.6 0-12 5.4-12 12v40c0 6.6 5.4 12 12 12h40c6.6 0 12-5.4 12-12v-40zm128 128c0-6.6-5.4-12-12-12h-40c-6.6 0-12 5.4-12 12v40c0 6.6 5.4 12 12 12h40c6.6 0 12-5.4 12-12v-40zm0-128c0-6.6-5.4-12-12-12h-40c-6.6 0-12 5.4-12 12v40c0 6.6 5.4 12 12 12h40c6.6 0 12-5.4 12-12v-40z"></path></svg><!-- <i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> --> Updated:</strong> <time datetime="2016-05-01T00:00:00+02:00">May 01, 2016</time></p>
+        
+      </footer>
+
+      <section class="page__share">
+  
+    <h4 class="page__share-title">Share on</h4>
+  
+
+  <a href="https://twitter.com/intent/tweet?via=josdirksen&amp;text=Service+Discovery+with+Docker+and+Consul%3A+part+2%20http%3A%2F%2Fwww.smartjava.org%2Fcontent%2Fservice-discovery-docker-and-consul-part-2%2F" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Twitter"><svg class="svg-inline--fa fa-twitter fa-w-16 fa-fw" aria-hidden="true" data-prefix="fab" data-icon="twitter" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" data-fa-i2svg=""><path fill="currentColor" d="M459.37 151.716c.325 4.548.325 9.097.325 13.645 0 138.72-105.583 298.558-298.558 298.558-59.452 0-114.68-17.219-161.137-47.106 8.447.974 16.568 1.299 25.34 1.299 49.055 0 94.213-16.568 130.274-44.832-46.132-.975-84.792-31.188-98.112-72.772 6.498.974 12.995 1.624 19.818 1.624 9.421 0 18.843-1.3 27.614-3.573-48.081-9.747-84.143-51.98-84.143-102.985v-1.299c13.969 7.797 30.214 12.67 47.431 13.319-28.264-18.843-46.781-51.005-46.781-87.391 0-19.492 5.197-37.36 14.294-52.954 51.655 63.675 129.3 105.258 216.365 109.807-1.624-7.797-2.599-15.918-2.599-24.04 0-57.828 46.782-104.934 104.934-104.934 30.213 0 57.502 12.67 76.67 33.137 23.715-4.548 46.456-13.32 66.599-25.34-7.798 24.366-24.366 44.833-46.132 57.827 21.117-2.273 41.584-8.122 60.426-16.243-14.292 20.791-32.161 39.308-52.628 54.253z"></path></svg><!-- <i class="fab fa-fw fa-twitter" aria-hidden="true"></i> --><span> Twitter</span></a>
+
+  <a href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Fwww.smartjava.org%2Fcontent%2Fservice-discovery-docker-and-consul-part-2%2F" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Facebook"><svg class="svg-inline--fa fa-facebook fa-w-14 fa-fw" aria-hidden="true" data-prefix="fab" data-icon="facebook" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" data-fa-i2svg=""><path fill="currentColor" d="M448 56.7v398.5c0 13.7-11.1 24.7-24.7 24.7H309.1V306.5h58.2l8.7-67.6h-67v-43.2c0-19.6 5.4-32.9 33.5-32.9h35.8v-60.5c-6.2-.8-27.4-2.7-52.2-2.7-51.6 0-87 31.5-87 89.4v49.9h-58.4v67.6h58.4V480H24.7C11.1 480 0 468.9 0 455.3V56.7C0 43.1 11.1 32 24.7 32h398.5c13.7 0 24.8 11.1 24.8 24.7z"></path></svg><!-- <i class="fab fa-fw fa-facebook" aria-hidden="true"></i> --><span> Facebook</span></a>
+
+  <a href="https://plus.google.com/share?url=http%3A%2F%2Fwww.smartjava.org%2Fcontent%2Fservice-discovery-docker-and-consul-part-2%2F" class="btn btn--google-plus" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Google Plus"><svg class="svg-inline--fa fa-google-plus fa-w-16 fa-fw" aria-hidden="true" data-prefix="fab" data-icon="google-plus" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512" data-fa-i2svg=""><path fill="currentColor" d="M248 8C111.1 8 0 119.1 0 256s111.1 248 248 248 248-111.1 248-248S384.9 8 248 8zm-70.7 372c-68.8 0-124-55.5-124-124s55.2-124 124-124c31.3 0 60.1 11 83 32.3l-33.6 32.6c-13.2-12.9-31.3-19.1-49.4-19.1-42.9 0-77.2 35.5-77.2 78.1s34.2 78.1 77.2 78.1c32.6 0 64.9-19.1 70.1-53.3h-70.1v-42.6h116.9c1.3 6.8 1.9 13.6 1.9 20.7 0 70.8-47.5 121.2-118.8 121.2zm230.2-106.2v35.5H372v-35.5h-35.5v-35.5H372v-35.5h35.5v35.5h35.2v35.5h-35.2z"></path></svg><!-- <i class="fab fa-fw fa-google-plus" aria-hidden="true"></i> --><span> Google+</span></a>
+
+  <a href="https://www.linkedin.com/shareArticle?mini=true&amp;url=http%3A%2F%2Fwww.smartjava.org%2Fcontent%2Fservice-discovery-docker-and-consul-part-2%2F" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on LinkedIn"><svg class="svg-inline--fa fa-linkedin fa-w-14 fa-fw" aria-hidden="true" data-prefix="fab" data-icon="linkedin" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" data-fa-i2svg=""><path fill="currentColor" d="M416 32H31.9C14.3 32 0 46.5 0 64.3v383.4C0 465.5 14.3 480 31.9 480H416c17.6 0 32-14.5 32-32.3V64.3c0-17.8-14.4-32.3-32-32.3zM135.4 416H69V202.2h66.5V416zm-33.2-243c-21.3 0-38.5-17.3-38.5-38.5S80.9 96 102.2 96c21.2 0 38.5 17.3 38.5 38.5 0 21.3-17.2 38.5-38.5 38.5zm282.1 243h-66.4V312c0-24.8-.5-56.7-34.5-56.7-34.6 0-39.9 27-39.9 54.9V416h-66.4V202.2h63.7v29.2h.9c8.9-16.8 30.6-34.5 62.9-34.5 67.2 0 79.7 44.3 79.7 101.9V416z"></path></svg><!-- <i class="fab fa-fw fa-linkedin" aria-hidden="true"></i> --><span> LinkedIn</span></a>
+</section>
+
+
+      
+  <nav class="pagination">
+    
+      <a href="http://www.smartjava.org/content/scalaz-features-everyday-usage-part-2-monad-transformers-and-reader-monad/" class="pagination--pager" title="Scalaz features for everyday usage part 2: Monad Transformers and the Reader Monad
+">Previous</a>
+    
+    
+      <a href="http://www.smartjava.org/content/render-3d-star-wars-force-awakens-models-blender-and-threejs/" class="pagination--pager" title="Render 3D Star Wars: The Force Awakens models in Blender and Three.js
+">Next</a>
+    
+  </nav>
+
+    </div>
+
+    
+  </article></DIV></DIV>
+      
+        <hr />
+        <!-- clipping information -->
+        <div class="clipping-information">
+          <label>Original url: <a href="http://www.smartjava.org/content/service-discovery-docker-and-consul-part-2/" target="_blank" referrerpolicy="no-referrer" rel="noopener noreferrer">Access</a></label><br />
+          <label>Created at: 2019-01-28 17:09:36</label><br />
+          <label>Category: default</label><br />
+          <label>Tags: none</label>
+        </div>
+    </div>
+  </body>
+</html>
