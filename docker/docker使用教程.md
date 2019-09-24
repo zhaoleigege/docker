@@ -3,7 +3,15 @@
 1. linux下载docker
 
    ```shell
+   # 删除旧的docker
+   sudo yum remove docker-ce
+   sudo rm -rf /var/lib/docker
    
+   # 下载rpm文件
+   wget -qO- https://download.docker.com/linux/centos/7/x86_64/stable/Packages/docker-ce-19.03.2-3.el7.x86_64.rpm
+   
+   sudo systemctl start docker
+   sudo docker run hello-world
    ```
 
 2. 设置管理docker不需要root权限
@@ -26,7 +34,7 @@
       重启docker
 
       ```shell
-      sudo  systemctl restart  docker
+      sudo systemctl restart  docker
       ```
 
    2. docker客户端配置
@@ -55,6 +63,52 @@
       curl http://192.168.124.72:5000/v2/_catalog
       ```
 
+4. docker基本使用
+   启动一个redis服务
+   ```shell
+   docker run \
+   --name redis \    				    # 服务的别名
+   -v ${本地绝对地址}:/data \ 	    # 本地存储位置映射到容器中的位置
+   -p 6379:6379 \						    # 本地端口映射为容器内的端口
+   --restart unless-stopped \    # 除非被停止，否则自动重启容器 
+   -d redis \                    # 启动的容器为redis，并且在后台运行
+   redis-server --appendonly yes # 容器内执行的服务的命令
+   ```
+   
+   查看容器详情
+   ```shell
+   docker inspect redis
+   ```
+   
+   通过bash(前提是容器含有bash)进入正在运行的容器中
+   ```shell
+   docker exec -it redis bash # redis也可以替换为容器的hash id编码
+   ```
+   
+   停止一个容器
+   ```shell
+   docker stop redis
+   ```
+   
+   查看所有容器的状态
+   ```shell
+   docker ps # 只查看还在运行的容器
+   
+   docker ps -a # 查看所有包括停止的容器
+   ```
+   
+   删除所有的容器
+   ```shell
+   docker rm -f $(docker ps -aq)
+   ```
+   
+5. 应用容器化最佳实践
+
+   * 编写应用代码
+   * 编写Dockerfile文件
+   * 构建应用镜像
+   * 运行应用
+   * 测试应用
 
 #### 参考资料
 
